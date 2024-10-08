@@ -1,17 +1,10 @@
 package com.sigurnost.securitytask.dto;
 
-import com.sigurnost.securitytask.entities.Role;
-
 public class UserDTO {
 
-    private Long id;
     private String username;
     private String email;
-    private Role role;
-
-    public Long getId() {
-        return id;
-    }
+    private String password;
 
     public String getUsername() {
         return username;
@@ -29,11 +22,11 @@ public class UserDTO {
         this.email = email;
     }
 
-    public Role getRole() {
-        return role;
+    public String getPassword() {
+        return password;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
