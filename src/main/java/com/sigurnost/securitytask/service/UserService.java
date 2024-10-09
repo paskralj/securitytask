@@ -12,6 +12,18 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
+    /**
+     * http://localhost:8080/api/users/register
+     *
+     * {
+     *     "username": "noviKorisnik",
+     *     "email": "novi.korisnik@example.com",
+     *     "password": "lozinka123"
+     * }
+     *
+     * @param user
+     * @return
+     */
     public User registerUser(User user){
         user.setRole(Role.USER.name());
         return userRepository.save(user);

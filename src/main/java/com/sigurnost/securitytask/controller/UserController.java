@@ -20,12 +20,17 @@ public class UserController {
 
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserDTO userDTO){
+        User user = convertUserDto(userDTO);
+        userService.registerUser(user);
+        return ResponseEntity.status(HttpStatus.CREATED).body("User created!");
+    }
+
+    private User convertUserDto(UserDTO userDTO){
         User user = new User();
         user.setUsername(userDTO.getUsername());
         user.setPassword(userDTO.getPassword());
         user.setEmail(userDTO.getEmail());
-        userService.registerUser(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body("User created!");
+        return user;
     }
 
 }
