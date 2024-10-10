@@ -5,7 +5,7 @@ import org.springframework.security.crypto.bcrypt.BCrypt;
 
 @Table(name = "sectable")
 @Entity
-public class User {
+public class UserEntity {
 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Id
@@ -13,12 +13,14 @@ public class User {
     private String username;
     private String passwordHash;
     private String email;
-    private String role;
 
-    public User() {
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    public UserEntity() {
     }
 
-    public User(String username, String password, String email) {
+    public UserEntity(String username, String password, String email) {
         this.username = username;
         this.passwordHash = hashPassword(password);
         this.email = email;
@@ -56,11 +58,15 @@ public class User {
         BCrypt.checkpw(password, this.passwordHash);
     }
 
-    public String getRole() {
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+
+    public Role getRole() {
         return role;
     }
 
-    public void setRole(String role) {
+    public void setRole(Role role) {
         this.role = role;
     }
 }
