@@ -1,8 +1,10 @@
 package com.sigurnost.securitytask.controller;
 
+import com.sigurnost.securitytask.dto.AuthResponseDTO;
 import com.sigurnost.securitytask.dto.LoginDTO;
 import com.sigurnost.securitytask.dto.UserDTO;
 import com.sigurnost.securitytask.entities.UserEntity;
+import com.sigurnost.securitytask.security.JwtGenerator;
 import com.sigurnost.securitytask.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -22,11 +24,13 @@ public class UserController {
 
     private final AuthenticationManager authenticationManager;
     private final UserService userService;
+    private final JwtGenerator jwtGenerator;
 
     @Autowired
-    public UserController(AuthenticationManager authenticationManager, UserService userService) {
+    public UserController(AuthenticationManager authenticationManager, UserService userService, JwtGenerator jwtGenerator) {
         this.authenticationManager = authenticationManager;
         this.userService = userService;
+        this.jwtGenerator = jwtGenerator;
     }
 
     /*
@@ -46,10 +50,11 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginDTO loginDTO) {
+    public ResponseEntity<AuthResponseDTO> login(@RequestBody LoginDTO loginDTO) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new ResponseEntity<>("User signed success!", HttpStatus.OK);
+        String token = jwtGenerator.generateToken(authentication);
+        return new ResponseEntity<>(new AuthResponseDTO(token), HttpStatus.OK);
     }
 
     private UserEntity convertUserDto(UserDTO userDTO) {
