@@ -1,7 +1,6 @@
 package com.sigurnost.securitytask.entities;
 
 import jakarta.persistence.*;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 
 @Table(name = "sectable")
 @Entity
@@ -22,7 +21,7 @@ public class UserEntity {
 
     public UserEntity(String username, String password, String email) {
         this.username = username;
-        this.passwordHash = hashPassword(password);
+        this.passwordHash = password;
         this.email = email;
     }
 
@@ -47,15 +46,7 @@ public class UserEntity {
     }
 
     public void setPassword(String password) {
-        this.passwordHash = hashPassword(password);
-    }
-
-    private String hashPassword(String password) {
-        return BCrypt.hashpw(password, BCrypt.gensalt());
-    }
-
-    public void checkPassword(String password) {
-        BCrypt.checkpw(password, this.passwordHash);
+        this.passwordHash = password;
     }
 
     public String getPasswordHash() {
