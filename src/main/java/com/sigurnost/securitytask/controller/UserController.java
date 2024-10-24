@@ -11,15 +11,13 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/users")
@@ -69,6 +67,18 @@ public class UserController {
             logoutHandler.logout(request, response, authentication);
         }
         return ResponseEntity.status(HttpStatus.OK).body("Successfully logged out");
+    }
+
+    @GetMapping("/user/dashboard")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public ResponseEntity<String> adminDashboard(){
+        return ResponseEntity.ok("Welcome to the USER Dashboard!");
+    }
+
+    @GetMapping("/admin/dashboard")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> userDashboard(){
+        return ResponseEntity.ok("Welcome to the ADMIN Dashboard!");
     }
 
     private UserEntity convertUserDto(UserDTO userDTO) {

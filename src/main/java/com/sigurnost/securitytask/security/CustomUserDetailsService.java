@@ -26,7 +26,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     }
 
     private Collection<GrantedAuthority> mapRoleToAuthorities(Role role) {
-        return Collections.singleton(new SimpleGrantedAuthority(role.name()));
+        return Collections.singleton(new SimpleGrantedAuthority("ROLE_" + role.name()));
     }
 
     @Override
