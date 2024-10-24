@@ -3,6 +3,9 @@ package com.sigurnost.securitytask.controller;
 import com.sigurnost.securitytask.dto.AuthResponseDTO;
 import com.sigurnost.securitytask.dto.LoginDTO;
 import com.sigurnost.securitytask.dto.UserDTO;
+import com.sigurnost.securitytask.dto.ChangeRoleDTO;
+import com.sigurnost.securitytask.entities.ChangeRoleResponse;
+import com.sigurnost.securitytask.entities.Role;
 import com.sigurnost.securitytask.entities.UserEntity;
 import com.sigurnost.securitytask.security.JwtGenerator;
 import com.sigurnost.securitytask.service.UserService;
@@ -79,6 +82,17 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<String> userDashboard(){
         return ResponseEntity.ok("Welcome to the ADMIN Dashboard!");
+    }
+
+    @PutMapping("/change-role/{username}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<ChangeRoleResponse> changeRole(@PathVariable String username, @RequestBody ChangeRoleDTO changeRoleDTO){
+        UserEntity user = userService.findUserByUsername(username);
+        Role oldRole = user.getRole();
+        Role newRole = changeRoleDTO.getNewRole();
+        userService.changeRole(user, newRole);
+        ChangeRoleResponse response = new ChangeRoleResponse(username, oldRole, newRole);
+        return ResponseEntity.ok(response);
     }
 
     private UserEntity convertUserDto(UserDTO userDTO) {

@@ -4,6 +4,7 @@ import com.sigurnost.securitytask.entities.Role;
 import com.sigurnost.securitytask.entities.UserEntity;
 import com.sigurnost.securitytask.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,5 +25,15 @@ public class UserService {
         user.setPassword(encodedPassword);
         user.setRole(Role.USER);
         return userRepository.save(user);
+    }
+
+    public UserEntity findUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
+    }
+
+    public void changeRole(UserEntity user, Role newRole) {
+        user.setRole(newRole);
+        userRepository.save(user);
     }
 }
